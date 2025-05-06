@@ -35,7 +35,7 @@ function HoverButton({ text, link }: { text: string; link: string }) {
 }
 
 const PAGES = [
-  { title: "رزرو وقت", link: "reserve" },
+  { title: "رزرو وقت", link: "app" },
   { title: "مشاهده خدمات", link: "reserve" },
   { title: "ورود کاربران", link: "reserve" },
   { title: "آرایشگران", link: "reserve" },
