@@ -3,6 +3,7 @@ import { vazirmatn } from "@/shared/fonts";
 import type { Metadata } from "next";
 import * as React from "react";
 import "./globals.css";
+import AppLayout from "@/components/layout/AppLayout";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,11 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
-      <body
-        className={`${vazirmatn.variable} antialiased font-vazirmatn`}
-        suppressHydrationWarning
-      >
-        <AppThemeProvider>{children}</AppThemeProvider>
+      <body className={`${vazirmatn.variable} antialiased font-vazirmatn`} suppressHydrationWarning>
+        <AppThemeProvider>
+          <AppLayout>{children}</AppLayout>
+        </AppThemeProvider>
       </body>
     </html>
   );
