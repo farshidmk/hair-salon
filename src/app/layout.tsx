@@ -1,16 +1,8 @@
+import AppThemeProvider from "@/providers/AppThemeProvider";
+import { vazirmatn } from "@/shared/fonts";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import * as React from "react";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,11 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="fa" dir="rtl" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${vazirmatn.variable} antialiased font-vazirmatn`}
+        suppressHydrationWarning
       >
-        {children}
+        <AppThemeProvider>{children}</AppThemeProvider>
       </body>
     </html>
   );
