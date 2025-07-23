@@ -23,7 +23,7 @@ const useCustomTheme = () => {
             contrastText: "#ffffff",
           },
           background: {
-            default: "#fff9fb",
+            default: "#f7e5eb",
             paper: "#ffffff",
           },
           warning: {

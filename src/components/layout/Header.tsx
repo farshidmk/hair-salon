@@ -13,7 +13,7 @@ type Props = {
 };
 const Header = ({ toggleSidebar }: Props) => {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box>
       <AppBar position="static">
         <Toolbar className="flex justify-between">
           {/* TODO: check user is logged in and show user's info */}
