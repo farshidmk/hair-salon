@@ -1,8 +1,8 @@
-import AppThemeProvider from "@/providers/AppThemeProvider";
 import { vazirmatn } from "@/shared/fonts";
 import type { Metadata } from "next";
 import * as React from "react";
 import "./globals.css";
+import AppProviders from "@/providers/AppProviders";
 
 export const metadata: Metadata = {
   title: "رزرواسیون سالن زیبایی",
@@ -17,7 +17,7 @@ export default function ApplicationLayout({
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
       <body className={`${vazirmatn.variable} antialiased font-vazirmatn `} suppressHydrationWarning>
-        <AppThemeProvider>{children}</AppThemeProvider>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

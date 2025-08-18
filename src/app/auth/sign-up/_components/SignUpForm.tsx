@@ -2,40 +2,44 @@
 
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
+import { Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { SignUpFormItems } from "../signUp.types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
 import { SALON_NAME } from "@/shared/global";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosRequestConfig } from "axios";
+import { UserRoundPlus } from "lucide-react";
 
 export default function SignUpForm() {
-  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpFormItems>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      NationalCode: "123123",
+    },
   });
 
+  const { mutate, isPending } = useMutation<SignUpFormItems, Error, AxiosRequestConfig<Partial<SignUpFormItems>>>({});
+
   const onSubmit = async (data: SignUpFormItems) => {
-    try {
-      console.log("Form Data:", data);
-      // Example: await fetch('/api/signup', { method: 'POST', body: JSON.stringify(data) });
-      alert("Sign-up successful!");
-    } catch (error) {
-      console.error("Sign-up error:", error);
-      alert("Sign-up failed. Please try again.");
-    }
+    mutate({
+      method: "post",
+      url: "Account/Register",
+      data,
+    });
   };
+
+  console.log({ errors }, process.env.NEXT_PUBLIC_API_URL);
 
   return (
     <div>
       <Typography variant="h6" fontWeight={600} textAlign="center" color="primary">
         {SALON_NAME}
       </Typography>
-      <div className="border-2 p-4 rounded-xl border-primary max-w-sm bg-white/60 backdrop-blur-3xl">
+      <div className="border-2 p-4 rounded-xl border-primary max-w-sm bg-white/60 backdrop-blur-3xl mx-1">
         <Typography variant="h5" align="center" gutterBottom fontWeight={700}>
           ثبت نام کنید
         </Typography>
@@ -44,9 +48,18 @@ export default function SignUpForm() {
             fullWidth
             label="نام"
             margin="normal"
-            {...register("name")}
-            error={!!errors.name}
-            helperText={errors.name?.message}
+            {...register("FirstName")}
+            error={!!errors.FirstName}
+            helperText={errors.FirstName?.message}
+            variant="outlined"
+          />
+          <TextField
+            fullWidth
+            label="نام خانوادگی"
+            margin="normal"
+            {...register("LastName")}
+            error={!!errors.LastName}
+            helperText={errors.LastName?.message}
             variant="outlined"
           />
           <TextField
@@ -54,34 +67,22 @@ export default function SignUpForm() {
             label="شماره تلفن"
             type="tel"
             margin="normal"
-            {...register("phoneNumber")}
-            error={!!errors.phoneNumber}
-            helperText={errors.phoneNumber?.message}
+            {...register("Mobile")}
+            error={!!errors.Mobile}
+            helperText={errors.Mobile?.message}
             variant="outlined"
             placeholder="مثال: 09123456789"
           />
-          <TextField
+
+          <Button
+            type="submit"
             fullWidth
-            label="رمز عبور"
-            type={showPassword ? "text" : "password"}
-            margin="normal"
-            {...register("password")}
-            error={!!errors.password}
-            helperText={errors.password?.message}
-            variant="outlined"
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword((p) => !p)}>
-                      {showPassword ? <EyeOff /> : <Eye />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-          <Button type="submit" fullWidth variant="contained" color="primary" sx={{ mt: 2 }}>
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+            endIcon={isPending ? <CircularProgress size={18} /> : <UserRoundPlus />}
+            disabled={isPending}
+          >
             ثبت نام
           </Button>
         </form>
@@ -91,10 +92,12 @@ export default function SignUpForm() {
 }
 
 const schema = z.object({
-  name: z.string().min(1, "نام را وارد کنید").max(30, "نام نمیتواند بیشتر از 30 کاراکتر باشد"),
-  phoneNumber: z
+  FirstName: z.string().min(1, "نام را وارد کنید").max(30, "نام نمیتواند بیشتر از 30 کاراکتر باشد"),
+  LastName: z.string().min(1, "نام را وارد کنید").max(30, "نام نمیتواند بیشتر از 30 کاراکتر باشد"),
+  Mobile: z
     .string()
     .min(1, "شماره تلفن خود را وارد کنید")
     .regex(/^09\d{9}$/, "شماره تلفن خود را به درستی وارد کنید مانند: 09123456789"),
-  password: z.string().min(6, "رمز عبور باید حداقل شامل 6 کاراکتر باشد").max(30, "رمز نباید بیشتر از 30 کاراکتر باشد"),
+  NationalCode: z.string(),
+  // password: z.string().min(6, "رمز عبور باید حداقل شامل 6 کاراکتر باشد").max(30, "رمز نباید بیشتر از 30 کاراکتر باشد"),
 });
