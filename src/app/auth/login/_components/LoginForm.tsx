@@ -42,29 +42,35 @@ const LoginForm = () => {
   }
 
   return (
-    <div>
+    <>
       {step === "phoneNumber" ? (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Typography variant="h6">شماره همراه خود را وارد کنید</Typography>
-          <TextField
-            label="شماره همراه"
-            {...register("PhoneNumber")}
-            type="tel"
-            fullWidth
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <PhoneAndroidIcon />
-                  </InputAdornment>
-                ),
-              },
-            }}
-            placeholder="09121234567"
-            error={Boolean(errors.PhoneNumber?.message)}
-            helperText={errors.PhoneNumber?.message}
-            sx={{ mt: 1 }}
-          />
+        <form onSubmit={handleSubmit(onSubmit)} className="min-h-48 flex flex-col justify-between">
+          <div>
+            <Typography variant="h6" gutterBottom>
+              شماره همراه خود را وارد کنید
+            </Typography>
+            <TextField
+              label="شماره همراه"
+              {...register("PhoneNumber")}
+              type="tel"
+              fullWidth
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PhoneAndroidIcon />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+              placeholder="09121234567"
+              error={Boolean(errors.PhoneNumber?.message)}
+              helperText={errors.PhoneNumber?.message}
+              sx={{ mt: 1 }}
+              disabled={isPendingPhoneNumber}
+            />
+          </div>
+          <div className="flex-1" />
           <div className="w-full flex justify-center pt-4">
             <Button
               onClick={() => handleSubmit(onSubmit)()}
@@ -85,7 +91,7 @@ const LoginForm = () => {
           <OTPInput length={6} onChange={(e) => console.log({ e })} />
         </div>
       )}
-    </div>
+    </>
   );
 };
 
