@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { SignUpFormItems } from "../signUp.types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SALON_NAME } from "@/shared/global";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosRequestConfig } from "axios";
 import { UserRoundPlus } from "lucide-react";
@@ -32,61 +31,54 @@ export default function SignUpForm() {
     });
   };
 
-  console.log({ errors }, process.env.NEXT_PUBLIC_API_URL);
-
   return (
     <div>
-      <Typography variant="h6" fontWeight={600} textAlign="center" color="primary">
-        {SALON_NAME}
+      <Typography variant="h5" align="center" gutterBottom fontWeight={700}>
+        ثبت نام کنید
       </Typography>
-      <div className="border-2 p-4 rounded-xl border-primary max-w-sm bg-white/60 backdrop-blur-3xl mx-1">
-        <Typography variant="h5" align="center" gutterBottom fontWeight={700}>
-          ثبت نام کنید
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <TextField
-            fullWidth
-            label="نام"
-            margin="normal"
-            {...register("FirstName")}
-            error={!!errors.FirstName}
-            helperText={errors.FirstName?.message}
-            variant="outlined"
-          />
-          <TextField
-            fullWidth
-            label="نام خانوادگی"
-            margin="normal"
-            {...register("LastName")}
-            error={!!errors.LastName}
-            helperText={errors.LastName?.message}
-            variant="outlined"
-          />
-          <TextField
-            fullWidth
-            label="شماره تلفن"
-            type="tel"
-            margin="normal"
-            {...register("Mobile")}
-            error={!!errors.Mobile}
-            helperText={errors.Mobile?.message}
-            variant="outlined"
-            placeholder="مثال: 09123456789"
-          />
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <TextField
+          fullWidth
+          label="نام"
+          margin="normal"
+          {...register("FirstName")}
+          error={!!errors.FirstName}
+          helperText={errors.FirstName?.message}
+          variant="outlined"
+        />
+        <TextField
+          fullWidth
+          label="نام خانوادگی"
+          margin="normal"
+          {...register("LastName")}
+          error={!!errors.LastName}
+          helperText={errors.LastName?.message}
+          variant="outlined"
+        />
+        <TextField
+          fullWidth
+          label="شماره تلفن"
+          type="tel"
+          margin="normal"
+          {...register("Mobile")}
+          error={!!errors.Mobile}
+          helperText={errors.Mobile?.message}
+          variant="outlined"
+          placeholder="مثال: 09123456789"
+        />
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-            endIcon={isPending ? <CircularProgress size={18} /> : <UserRoundPlus />}
-            disabled={isPending}
-          >
-            ثبت نام
-          </Button>
-        </form>
-      </div>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          sx={{ mt: 2 }}
+          endIcon={isPending ? <CircularProgress size={18} /> : <UserRoundPlus />}
+          disabled={isPending}
+        >
+          ثبت نام
+        </Button>
+      </form>
     </div>
   );
 }

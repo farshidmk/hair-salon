@@ -1,39 +1,49 @@
 import { api } from "@/shared/api";
-import { MutationFunction, QueryFunction, QueryKey } from "@tanstack/react-query";
-import { AxiosRequestConfig } from "axios";
+import { ServerCall } from "@/types/server";
+import { QueryFunction, QueryKey } from "@tanstack/react-query";
+import axios from "axios";
 
-export const serverCall: MutationFunction<unknown, unknown> = async (variables) => {
-  const { url, method, data, ...rest } = variables as AxiosRequestConfig;
+// Generic server call
+export async function serverCall<T = unknown>(config: ServerCall<T>): Promise<T> {
   try {
-    const requestOptions: AxiosRequestConfig = {
-      url,
-      method,
+    const response = await api.request<T>({
+      ...config,
+      url: `/${config.url}`,
       withCredentials: true,
-      data,
-      ...rest,
-    };
-    const response = await api({ ...requestOptions });
-    if (response?.status === 200) {
-      return response?.data;
-    } else {
-      throw new Error(`Error on operation... - ${response?.statusText}`);
+    });
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || error.message);
     }
-  } catch (e) {
-    throw new Error(JSON.stringify(e) || `Error on operation...`);
+    throw error;
   }
+}
+
+// Mutation wrapper for React Query
+export const mutationRequest = <T = unknown, TVariables = ServerCall>(
+  configFn?: (variables: TVariables) => ServerCall
+) => {
+  return async (variables: TVariables) => {
+    const config = configFn ? configFn(variables) : (variables as ServerCall);
+    return await serverCall(config);
+  };
 };
 
-export const getRequest: QueryFunction<unknown, QueryKey, never> = async ({ queryKey }: { queryKey: QueryKey }) => {
-  let tempEntity = "";
-  if (Array.isArray(queryKey)) {
-    tempEntity = queryKey.join("/");
-  }
-  tempEntity = String(tempEntity);
-  try {
-    return await serverCall({ entity: tempEntity, method: "get" });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(error.message || "Error on Fetching Data");
+// GET request wrapper for React Query
+export const getRequest = <T = unknown>(): QueryFunction<T, QueryKey> => {
+  return async ({ queryKey }) => {
+    let path = "";
+    if (Array.isArray(queryKey)) {
+      path = queryKey.join("/");
+    } else {
+      path = String(queryKey);
     }
-  }
+
+    return await serverCall<T>({
+      url: path,
+      method: "GET",
+    });
+  };
 };
