@@ -3,6 +3,6 @@ export type LoginFormPhoneNumber = {
 };
 
 export type OtpLoginForm = {
-  otpCode: string;
-  userId: string;
+  TotpCode: string;
+  UserId: string;
 };

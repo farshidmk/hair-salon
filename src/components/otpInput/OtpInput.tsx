@@ -52,6 +52,7 @@ const OTPInput = ({ length = 6, onChange }: { length?: number; onChange: (value:
                 variant="outlined"
                 size="small"
                 sx={{ textAlign: "center", borderRadius: "50%" }}
+                autoFocus={index === 0}
               />
             </Grid>
           ))}
