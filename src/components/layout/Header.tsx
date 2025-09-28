@@ -7,7 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import { AlignJustify } from "lucide-react";
 import { Avatar, CircularProgress, Typography } from "@mui/material";
-import { getTokenInfo } from "@/services/readCookies";
+import { getTokenInfo } from "@/services/cookies";
 import { useQuery } from "@tanstack/react-query";
 import { LoggedInUser } from "@/types/user";
 import Link from "next/link";

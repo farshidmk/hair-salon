@@ -3,10 +3,11 @@ import { ServerCall, ServerResponse } from "@/types/server";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { LoginFormPhoneNumber, OtpLoginForm } from "../login.types";
+import { LoginResponse, OtpLoginForm } from "../login.types";
 import { BadgeCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import CountdownButton from "@/app/auth/login/_components/CountDownButton";
+import { setLoginInfoInCookie } from "@/services/cookies";
 
 type Props = {
   phoneNumber: string;
@@ -16,7 +17,7 @@ type Props = {
 const OtpInputForm = ({ phoneNumber, userId }: Props) => {
   const router = useRouter();
   const [otpCode, setOtpCode] = useState<string>("");
-  const { mutate, isPending } = useMutation<ServerResponse<LoginFormPhoneNumber>, Error, ServerCall<OtpLoginForm>>({});
+  const { mutate, isPending } = useMutation<ServerResponse<LoginResponse>, Error, ServerCall<OtpLoginForm>>({});
 
   async function sendOtp(code: string) {
     mutate(
@@ -29,8 +30,9 @@ const OtpInputForm = ({ phoneNumber, userId }: Props) => {
         },
       },
       {
-        onSuccess: (res) => {
+        onSuccess: async (res) => {
           if (res.Succeeded) {
+            await setLoginInfoInCookie(res.Data.Token, res.Data.RefreshToken);
             router.push("/app");
           }
         },
