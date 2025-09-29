@@ -3,14 +3,22 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { LoggedInUser } from "@/types/user";
 
+const tokenDefaultKey = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/";
+
 export async function getTokenInfo() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("access_token")?.value;
+  const token = cookieStore.get("token")?.value;
   if (!token) {
     return null;
   }
-  const decodedToken = jwt.decode(token) as LoggedInUser;
-  return decodedToken;
+  const decodedToken = jwt.decode(token) as any;
+
+  const tokenInfo: LoggedInUser = {
+    mobilePhone: decodedToken[`${tokenDefaultKey}mobilephone`],
+    surname: decodedToken[`${tokenDefaultKey}surname`],
+    role: decodedToken[`${tokenDefaultKey}role`],
+  };
+  return tokenInfo;
 }
 
 export async function setLoginInfoInCookie(token: string, refreshToken: string) {

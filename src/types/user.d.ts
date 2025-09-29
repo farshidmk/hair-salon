@@ -1,4 +1,7 @@
+import { Roles } from "@/shared/consts";
+
 export type LoggedInUser = {
-  firstName: string;
-  lastName: string;
+  surname: string;
+  mobilePhone: string;
+  role: Roles[];
 };
