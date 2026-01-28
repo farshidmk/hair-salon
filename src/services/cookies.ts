@@ -16,7 +16,7 @@ export async function getTokenInfo() {
   const tokenInfo: LoggedInUser = {
     mobilePhone: decodedToken[`${tokenDefaultKey}mobilephone`],
     surname: decodedToken[`${tokenDefaultKey}surname`],
-    role: decodedToken[`${tokenDefaultKey}role`],
+    role: decodedToken[`Role`],
   };
   return tokenInfo;
 }

@@ -35,7 +35,11 @@ const RootPage = () => {
           <Grid spacing={3} container sx={{ width: "100%" }} justifyContent="center">
             {SERVICES.map((service) => (
               <Grid key={service.iconUrl} size={{ xs: 4, sm: 3, md: 2 }}>
-                <ServiceIcon iconUrl={`/assets/icons/services/${service.iconUrl}`} title={service.title} link={service.link} />
+                <ServiceIcon
+                  iconUrl={`/assets/icons/services/${service.iconUrl}`}
+                  title={service.title}
+                  link={service.link}
+                />
               </Grid>
             ))}
           </Grid>

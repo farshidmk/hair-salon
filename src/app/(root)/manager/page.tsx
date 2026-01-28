@@ -4,25 +4,25 @@ import React from "react";
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import Link from "next/link";
 
-const AdminRootPage = () => {
+const ManagerRootPage = () => {
   const services = [
     {
       title: "آرایشگران",
       description: "لیست آرایشگران",
       image: "/images/haircut.jpg",
-      url: "admin/barbers",
+      url: "manager/barbers",
     },
     {
       title: "سرویس ها",
       description: "سرویس های و خدمات فعال",
       image: "/images/color.jpg",
-      url: "admin/services",
+      url: "manager/services",
     },
     {
       title: "Hair Styling",
       description: "Styling for events, parties, and weddings.",
       image: "/images/style.jpg",
-      url: "admin/users",
+      url: "manager/users",
     },
   ];
 
@@ -35,7 +35,7 @@ const AdminRootPage = () => {
   );
 };
 
-export default AdminRootPage;
+export default ManagerRootPage;
 
 interface MenuCardProps {
   title: string;

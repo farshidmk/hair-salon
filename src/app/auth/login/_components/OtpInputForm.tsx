@@ -1,6 +1,6 @@
 import OTPInput from "@/components/otpInput/OtpInput";
 import { ServerCall, ServerResponse } from "@/types/server";
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { LoginResponse, OtpLoginForm } from "../login.types";
@@ -62,10 +62,11 @@ const OtpInputForm = ({ phoneNumber, userId }: Props) => {
       <div className="flex-1" />
       <Button
         variant="outlined"
-        endIcon={isPending ? <CircularProgress size={18} /> : <BadgeCheck />}
+        endIcon={<BadgeCheck />}
         onClick={sendOtp}
         disabled={otpCode.length !== 6}
         fullWidth
+        loading={isPending}
       >
         تایید
       </Button>

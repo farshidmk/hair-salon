@@ -1,4 +1,4 @@
-import { Alert, Button, CircularProgress, InputAdornment, TextField, Typography } from "@mui/material";
+import { Alert, Button, InputAdornment, TextField, Typography } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -84,10 +84,10 @@ const LoginForm = () => {
           <div className="w-full flex justify-center pt-4">
             <Button
               onClick={() => handleSubmit(onSubmit)()}
-              endIcon={isPendingPhoneNumber ? <CircularProgress size={18} /> : <SendIcon />}
+              endIcon={<SendIcon />}
               color="primary"
               variant="contained"
-              disabled={isPendingPhoneNumber}
+              loading={isPendingPhoneNumber}
             >
               ارسال کد
             </Button>
