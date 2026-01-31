@@ -27,6 +27,10 @@ interface IText<T = FieldValues> extends IBaseInput<T> {
   inputType: "text";
   elementProps?: TextFieldProps;
 }
+interface IMoney<T = FieldValues> extends IBaseInput<T> {
+  inputType: "money";
+  elementProps?: TextFieldProps;
+}
 
 interface IPassword<T = FieldValues> extends IBaseInput<T> {
   inputType: "password";
@@ -63,6 +67,7 @@ interface ICustomInput<T = FieldValues> extends IBaseInput<T> {
 
 type IRenderInput<T = unknown> =
   | IText<T>
+  | IMoney<T>
   | IPassword<T>
   | ISelect<T>
   | IAutocomplete<T>

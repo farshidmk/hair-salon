@@ -1,26 +1,23 @@
 "use client";
 
-import React from "react";
+import useGetUserInfo from "@/hooks/useGetUserInfo";
+import useIsSmallScreen from "@/hooks/useIsSmallScreen";
+import LoginIcon from "@mui/icons-material/Login";
+import { Avatar, CircularProgress, Tooltip, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
+import Toolbar from "@mui/material/Toolbar";
 import { AlignJustify } from "lucide-react";
-import { Avatar, CircularProgress, Tooltip, Typography } from "@mui/material";
-import { getTokenInfo } from "@/services/cookies";
-import { useQuery } from "@tanstack/react-query";
-import { LoggedInUser } from "@/types/user";
 import Link from "next/link";
-import LoginIcon from "@mui/icons-material/Login";
 
 type Props = {
   toggleSidebar: () => void;
 };
 const Header = ({ toggleSidebar }: Props) => {
-  const { data: userInfo, status: tokenStatus } = useQuery<LoggedInUser | null, Error, LoggedInUser | null>({
-    queryKey: ["check token"],
-    queryFn: getTokenInfo,
-  });
+  const { data: userInfo, status: tokenStatus } = useGetUserInfo();
+  const isSmallScreen = useIsSmallScreen();
+
   return (
     <Box>
       <AppBar position="static">
@@ -33,9 +30,11 @@ const Header = ({ toggleSidebar }: Props) => {
                 <IconButton>
                   <Avatar />
                 </IconButton>
-                <div className="flex flex-col gap-0.5">
-                  <Typography variant="body1">{userInfo.surname}</Typography>
-                </div>
+                {!isSmallScreen && (
+                  <div className="flex flex-col gap-0.5">
+                    <Typography variant="body1">{userInfo.surname}</Typography>
+                  </div>
+                )}
               </div>
             ) : (
               <Link href="/auth/login">
@@ -48,7 +47,7 @@ const Header = ({ toggleSidebar }: Props) => {
             )}
           </div>
           <div className="flex-1 flex justify-center">
-            <Typography className="">Hair Salon Name</Typography>
+            <Typography className="">{process.env.NEXT_PUBLIC_HAIR_SALON_NAME}</Typography>
           </div>
           <div className="flex-1 flex justify-end">
             {userInfo && (

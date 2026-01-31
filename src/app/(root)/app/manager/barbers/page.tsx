@@ -6,7 +6,6 @@ const BarbersPage = () => {
   return (
     <div>
       <BarberForm />
-      BarbersPage
     </div>
   );
 };

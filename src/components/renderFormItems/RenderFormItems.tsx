@@ -1,5 +1,5 @@
 import { IRenderInput } from "@/types/renderItem";
-import React from "react";
+import RenderMoneyFormItem from "./RenderMoneyFormItem";
 import RenderTextFormItem from "./RenderTextFormItem";
 
 type Props = {
@@ -10,6 +10,8 @@ const RenderFormItems = ({ item }: Props) => {
   switch (item.inputType) {
     case "text":
       return <RenderTextFormItem item={item} />;
+    case "money":
+      return <RenderMoneyFormItem item={item} />;
 
     default:
       break;

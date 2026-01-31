@@ -19,6 +19,7 @@ const RenderTextFormItem = ({ item }: Props) => {
       {...item.elementProps}
       error={Boolean(fieldError)}
       helperText={fieldError as string}
+      fullWidth
     />
   );
 };

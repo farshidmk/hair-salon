@@ -1,15 +1,31 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { Button, Collapse, Divider } from "@mui/material";
+import { useState } from "react";
 import ServiceForm from "./_components/ServiceForm";
+import ListOfServices from "./_components/ListOfServices";
 
 const ServicesPage = () => {
-  const { data, status } = useQuery({
-    queryKey: ["Service", "?pageNo=1&pageSize=15"],
-  });
+  const [showCreateService, setShowCreateService] = useState<boolean>(true);
+
   return (
-    <div>
-      <ServiceForm />
+    <div className="p-2 h-full flex flex-col gap-1 ">
+      <div className="w-full ">
+        <Button
+          variant={showCreateService ? "outlined" : "contained"}
+          onClick={() => setShowCreateService((p) => !p)}
+          color="success"
+          endIcon={<AddCircleOutlineIcon />}
+        >
+          ایجاد سرویس جدید
+        </Button>
+      </div>
+
+      <Collapse in={showCreateService}>
+        <ServiceForm />
+      </Collapse>
+      <Divider />
+      <ListOfServices />
     </div>
   );
 };

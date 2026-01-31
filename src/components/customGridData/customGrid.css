@@ -1,0 +1,6 @@
+.customCellWrapText {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
