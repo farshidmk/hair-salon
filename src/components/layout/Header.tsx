@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import { AlignJustify } from "lucide-react";
-import { Avatar, CircularProgress, Typography } from "@mui/material";
+import { Avatar, CircularProgress, Tooltip, Typography } from "@mui/material";
 import { getTokenInfo } from "@/services/cookies";
 import { useQuery } from "@tanstack/react-query";
 import { LoggedInUser } from "@/types/user";
@@ -39,9 +39,11 @@ const Header = ({ toggleSidebar }: Props) => {
               </div>
             ) : (
               <Link href="/auth/login">
-                <IconButton sx={{ color: "white" }}>
-                  <LoginIcon />
-                </IconButton>
+                <Tooltip title="ورود">
+                  <IconButton sx={{ color: "white" }}>
+                    <LoginIcon />
+                  </IconButton>
+                </Tooltip>
               </Link>
             )}
           </div>
@@ -49,9 +51,11 @@ const Header = ({ toggleSidebar }: Props) => {
             <Typography className="">Hair Salon Name</Typography>
           </div>
           <div className="flex-1 flex justify-end">
-            <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={() => toggleSidebar()}>
-              <AlignJustify />
-            </IconButton>
+            {userInfo && (
+              <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={() => toggleSidebar()}>
+                <AlignJustify />
+              </IconButton>
+            )}
           </div>
         </Toolbar>
       </AppBar>

@@ -3,3 +3,5 @@ export enum Roles {
   Admin = "admin",
   Stylist = "stylist",
 }
+
+export const DEFAULT_COMPANY_ID = 1;
