@@ -1,28 +1,39 @@
 "use client";
 
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+import { Autocomplete, Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
+import { useForm, Controller, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BarberFormValues, barberSchema } from "../barber.validation";
 import { PhotoDropzone } from "@/components/photoDropzone/PhotoDropzone";
 import { useMutation } from "@tanstack/react-query";
 import { ServerResponse } from "@/types/server";
 import { DEFAULT_COMPANY_ID } from "@/shared/consts";
+import RenderFormItems from "@/components/renderFormItems/RenderFormItems";
+import { IRenderInput } from "@/types/renderItem";
+import { Barber } from "../barber.types";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import useGetAllServices from "../_hooks/useGetAllServices";
+import StatusHandler from "@/components/statusHandler/StatusHandler";
+import { ServiceWithId } from "../../services/service.types";
 
 function BarberForm() {
-  //   const createBarber = useCreateBarber();
-  const { mutate, status } = useMutation<ServerResponse<number>, Error, BarberFormValues>({});
+  const { data: listOfServices, status: listOfServicesStatus, refetch: listOfServicesRefetch } = useGetAllServices();
+  const { mutate, isPending } = useMutation<ServerResponse<number>, Error, BarberFormValues>({});
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<BarberFormValues>({
+  const formMethods = useForm<BarberFormValues>({
     resolver: zodResolver(barberSchema),
     defaultValues: {
       CompanyId: DEFAULT_COMPANY_ID,
+      Services: [],
     },
   });
+  const {
+    watch,
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = formMethods;
 
   const onSubmit = (data: BarberFormValues) => {
     // createBarber.mutate(data);
@@ -30,83 +41,93 @@ function BarberForm() {
   };
 
   return (
-    <Box maxWidth={600} mx="auto" mt={4}>
-      <Typography variant="h5" mb={3}>
+    <Container maxWidth="xl">
+      <Typography variant="h5" mb={1} fontWeight={600}>
         ثبت نام آرایشگر
       </Typography>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Controller
-              name="FirstName"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="نام"
+      <form onSubmit={handleSubmit(onSubmit)} className="pt-4">
+        <FormProvider {...formMethods}>
+          <Grid container spacing={1}>
+            {ITEMS.map((item) => (
+              <Grid size={{ xs: 12, md: 4 }} key={item.name}>
+                <RenderFormItems item={item as IRenderInput} />
+              </Grid>
+            ))}
+
+            <Grid size={{ xs: 12 }}>
+              <Controller
+                name="Photo"
+                control={control}
+                render={({ field }) => (
+                  <PhotoDropzone
+                    onChange={field.onChange}
+                    error={errors.Photo?.message}
+                    value={watch("Photo") as unknown as File}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <StatusHandler
+                status={listOfServicesStatus}
+                refetch={listOfServicesRefetch}
+                skeletonHeight={20}
+                showLinearProgress
+              >
+                <Autocomplete
+                  multiple
+                  options={listOfServices?.Data?.Items ?? []}
+                  getOptionKey={(option: ServiceWithId) => option.Id}
+                  getOptionLabel={(option: ServiceWithId) => option.name}
+                  renderInput={(params) => <TextField {...params} label="سرویس" placeholder="انتخاب سرویس ها" />}
                   fullWidth
-                  error={!!errors.FirstName}
-                  helperText={errors.FirstName?.message}
+                  value={listOfServices?.Data?.Items.filter((service) => watch("Services").includes(service.Id))}
+                  onChange={(e, v) => {
+                    setValue(
+                      "Services",
+                      v.map((service) => service.Id)
+                    );
+                  }}
                 />
-              )}
-            />
+              </StatusHandler>
+            </Grid>
           </Grid>
-
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Controller
-              name="LastName"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="نام خانوادگی"
-                  fullWidth
-                  error={!!errors.LastName}
-                  helperText={errors.LastName?.message}
-                />
-              )}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Controller
-              name="Mobile"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="تلفن همراه"
-                  fullWidth
-                  error={!!errors.Mobile}
-                  helperText={errors.Mobile?.message}
-                />
-              )}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Controller
-              name="Photo"
-              control={control}
-              render={({ field }) => <PhotoDropzone onChange={field.onChange} error={errors.Photo?.message} />}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 6 }}>
+          <div className="w-full flex items-center justify-center mt-2">
             <Button
               type="submit"
-              variant="contained"
+              loading={isPending}
+              sx={{ maxWidth: "400px" }}
               fullWidth
-              //   disabled={createBarber.isPending}
+              color="success"
+              variant="contained"
+              endIcon={<CheckCircleOutlineIcon />}
             >
-              Register Barber
+              ثبت
             </Button>
-          </Grid>
-        </Grid>
+          </div>
+        </FormProvider>
       </form>
-    </Box>
+    </Container>
   );
 }
 
 export default BarberForm;
+
+const ITEMS: IRenderInput<Barber>[] = [
+  {
+    name: "FirstName",
+    inputType: "text",
+    label: "نام",
+  },
+  {
+    name: "LastName",
+    inputType: "text",
+    label: "قیمت",
+  },
+  {
+    name: "Mobile",
+    inputType: "text",
+    label: "تلفن همراه",
+  },
+];
