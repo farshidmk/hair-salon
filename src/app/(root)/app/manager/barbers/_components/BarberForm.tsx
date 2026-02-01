@@ -1,6 +1,6 @@
 "use client";
 
-import { Autocomplete, Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
+import { Autocomplete, Button, Container, Grid, TextField, Typography } from "@mui/material";
 import { useForm, Controller, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BarberFormValues, barberSchema } from "../barber.validation";

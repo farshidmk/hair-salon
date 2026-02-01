@@ -4,6 +4,7 @@ import BarberForm from "./_components/BarberForm";
 import { Button, Collapse, Divider } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import ListOfBarbers from "./_components/ListOfBarbers";
 
 const BarbersPage = () => {
   const [showCreateService, setShowCreateService] = useState<boolean>(true);
@@ -25,7 +26,7 @@ const BarbersPage = () => {
         <BarberForm />
       </Collapse>
       <Divider />
-      {/* <ListOfBarbers /> */}
+      <ListOfBarbers />
     </div>
   );
 };

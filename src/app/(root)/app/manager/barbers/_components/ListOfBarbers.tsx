@@ -1,66 +1,46 @@
-import { PaginatedServerResponse, ServerResponse } from "@/types/server";
-import { useQuery } from "@tanstack/react-query";
-import React, { useMemo } from "react";
-import { Service, ServiceWithId } from "../service.types";
 import CustomGridData from "@/components/customGridData/CustomeGridData";
 import { CustomGridColDef } from "@/components/customGridData/customGrid.types";
-import { showMoney } from "@/services/utils";
-import { Container, IconButton, Tooltip } from "@mui/material";
+import { DEFAULT_COMPANY_ID } from "@/shared/consts";
+import { ServerResponse } from "@/types/server";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
+import { Container, IconButton, Tooltip } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { Barber } from "../barber.types";
 
-const ListOfServices = () => {
-  const { data, status } = useQuery<
-    PaginatedServerResponse<ServiceWithId[]>,
-    Error,
-    PaginatedServerResponse<ServiceWithId[]>
-  >({
-    queryKey: ["Service", "?pageNo=1&pageSize=15"],
+const ListOfBarbers = () => {
+  const { data, status } = useQuery<ServerResponse<Barber[]>, Error, ServerResponse<Barber[]>>({
+    queryKey: [`UserCompany/GetBarberCompany?companyId=${DEFAULT_COMPANY_ID}`],
   });
 
-  const columns = useMemo((): CustomGridColDef<Service>[] => {
+  const columns = useMemo((): CustomGridColDef<Barber>[] => {
     return [
-      //   {
-      //     field: "photo",
-      //     sortable: false,
-      //     headerName: "عکس",
-      //     align: "center",
-      //     headerAlign: "center",
-      //     renderCell: (param) => (
-      //       <Tooltip title={param.row.seenState ? "دیده شده" : "دیده نشده"}>
-      //         {param.row.seenState ? <DraftsIcon color="disabled" /> : <LocalPostOfficeIcon color="primary" />}
-      //       </Tooltip>
-      //     ),
-      //     width: 65,
-      //   },
-      { field: "name", sortable: false, headerName: "نام", flex: 2, align: "center", headerAlign: "center" },
+      { field: "FirstName", sortable: false, headerName: "نام", flex: 2, align: "center", headerAlign: "center" },
       {
-        field: "price",
+        field: "LastName",
         sortable: false,
-        headerName: "قیمت",
+        headerName: "نام خانوادگی",
         flex: 1,
         align: "center",
         headerAlign: "center",
-        cellClassName: "acsGrid-wrapText",
-        renderCell: (param) => (
-          <div className="customCellWrapText">
-            <p className="text-xs">{showMoney(param.row.price)}</p>
-          </div>
-        ),
+        renderCell: ({ value }) => <a href={`tel:${value}`}>{value}</a>,
       },
       {
-        field: "beyanePrice",
+        field: "Mobile",
         sortable: false,
-        headerName: "قیمت بیانه",
-        flex: 1,
+        headerName: "شماره تلفن",
+        width: 200,
         align: "center",
         headerAlign: "center",
-        cellClassName: "acsGrid-wrapText",
-        renderCell: (param) => (
-          <div className="customCellWrapText">
-            <p className="text-xs">{showMoney(param.row.beyanePrice)}</p>
-          </div>
-        ),
+      },
+      {
+        field: "Services",
+        sortable: false,
+        headerName: "سرویس ها",
+        width: 200,
+        align: "center",
+        headerAlign: "center",
       },
 
       {
@@ -94,9 +74,9 @@ const ListOfServices = () => {
     <Container maxWidth="xl" sx={{ flex: 1, overflow: "auto", display: "flex", flexDirection: "column" }}>
       <CustomGridData
         columns={columns}
-        rows={data?.Data.Items}
+        rows={data?.Data}
         loading={status === "pending"}
-        getRowId={(row: ServiceWithId) => row.Id}
+        getRowId={(row: Barber) => row.Id!}
       />
       ;
     </Container>
@@ -123,4 +103,4 @@ const ListOfServices = () => {
         /> */
 }
 
-export default ListOfServices;
+export default ListOfBarbers;
