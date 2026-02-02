@@ -1,10 +1,10 @@
 import { AxiosRequestConfig, Method } from "axios";
 
 export type ServerResponse<T = unknown> = {
-  Data: T;
-  Succeeded: boolean;
-  Messages: string;
-  ErrorList: string[];
+  data: T;
+  succeeded: boolean;
+  messages: string;
+  errorList: string[];
 };
 
 export type ServerCall<T = unknown> = Omit<AxiosRequestConfig<T>, "method"> & {
@@ -12,15 +12,15 @@ export type ServerCall<T = unknown> = Omit<AxiosRequestConfig<T>, "method"> & {
 };
 
 export type PaginatedServerResponse<T = unknown> = {
-  Data: {
-    Items: T[];
-    PageNumber: number;
-    TotalPages: number;
-    TotalCount: number;
-    HasPreviousPage: boolean;
-    HasNextPage: boolean;
+  data: {
+    items: T[];
+    pageNumber: number;
+    totalPages: number;
+    totalCount: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
   };
-  Succeeded: boolean;
-  Messages: string;
-  ErrorList: string[];
+  succeeded: boolean;
+  messages: string;
+  errorList: string[];
 };

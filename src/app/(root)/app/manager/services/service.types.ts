@@ -6,4 +6,4 @@ export type Service = {
   beyanePrice: number;
 };
 
-export type ServiceWithId = { Id: number } & Service;
+export type ServiceWithId = { id: number } & Service;

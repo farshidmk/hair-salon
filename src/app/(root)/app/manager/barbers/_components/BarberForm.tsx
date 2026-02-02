@@ -18,7 +18,7 @@ import { ServiceWithId } from "../../services/service.types";
 
 function BarberForm() {
   const { data: listOfServices, status: listOfServicesStatus, refetch: listOfServicesRefetch } = useGetAllServices();
-  const { mutate, isPending } = useMutation<ServerResponse<number>, Error, BarberFormValues>({});
+  const { isPending } = useMutation<ServerResponse<number>, Error, BarberFormValues>({});
 
   const formMethods = useForm<BarberFormValues>({
     resolver: zodResolver(barberSchema),
@@ -77,12 +77,12 @@ function BarberForm() {
               >
                 <Autocomplete
                   multiple
-                  options={listOfServices?.Data?.Items ?? []}
+                  options={listOfServices?.data?.items ?? []}
                   getOptionKey={(option: ServiceWithId) => option.Id}
                   getOptionLabel={(option: ServiceWithId) => option.name}
                   renderInput={(params) => <TextField {...params} label="سرویس" placeholder="انتخاب سرویس ها" />}
                   fullWidth
-                  value={listOfServices?.Data?.Items.filter((service) => watch("Services").includes(service.Id))}
+                  value={listOfServices?.data?.items.filter((service) => watch("Services").includes(service.Id))}
                   onChange={(e, v) => {
                     setValue(
                       "Services",
@@ -116,18 +116,24 @@ export default BarberForm;
 
 const ITEMS: IRenderInput<Barber>[] = [
   {
-    name: "FirstName",
+    name: "firstName",
     inputType: "text",
     label: "نام",
   },
   {
-    name: "LastName",
+    name: "lastName",
     inputType: "text",
     label: "قیمت",
   },
   {
-    name: "Mobile",
+    name: "mobile",
     inputType: "text",
     label: "تلفن همراه",
   },
 ];
+
+// PhoneNumber: z
+//     .string()
+//     .regex(/^09[0-9]{9}$/, { message: "شماره تلفن معتبر نیست. شماره باید با 09 شروع شود و 11 رقم باشد." })
+//     .min(11, { message: "شماره تلفن باید 11 رقم باشد." }) // Optional extra validation
+//     .max(11, { message: "شماره تلفن باید 11 رقم باشد." }), // Optional extra validation

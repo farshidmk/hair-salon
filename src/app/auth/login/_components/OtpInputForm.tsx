@@ -31,8 +31,8 @@ const OtpInputForm = ({ phoneNumber, userId }: Props) => {
       },
       {
         onSuccess: async (res) => {
-          if (res.Succeeded) {
-            await setLoginInfoInCookie(res.Data.Token, res.Data.RefreshToken);
+          if (res.succeeded) {
+            await setLoginInfoInCookie(res.data.token, res.data.refreshToken);
             router.push("/app");
           }
         },

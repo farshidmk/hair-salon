@@ -27,3 +27,10 @@ export async function setLoginInfoInCookie(token: string, refreshToken: string) 
   cookieStore.set("refreshToken", refreshToken, {});
   return true;
 }
+
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete("token");
+  cookieStore.delete("refreshToken");
+  return true;
+}

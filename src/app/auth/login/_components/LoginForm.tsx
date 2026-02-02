@@ -35,7 +35,7 @@ const LoginForm = () => {
       },
       {
         onSuccess: (res) => {
-          if (res.Succeeded) {
+          if (res.succeeded) {
             setStep("otp");
           }
         },
@@ -71,10 +71,10 @@ const LoginForm = () => {
               disabled={isPendingPhoneNumber}
             />
           </div>
-          {data && !data?.Succeeded && (
+          {data && !data?.succeeded && (
             <Alert severity="error" variant="filled" sx={{ mt: 1 }}>
               <ul>
-                {data.ErrorList.map((err) => (
+                {data.errorList.map((err) => (
                   <li key={err}>{err}</li>
                 ))}
               </ul>
@@ -94,7 +94,7 @@ const LoginForm = () => {
           </div>
         </form>
       ) : (
-        <OtpInputForm phoneNumber={getValues("PhoneNumber")} userId={data?.Data ?? ""} />
+        <OtpInputForm phoneNumber={getValues("PhoneNumber")} userId={data?.data ?? ""} />
       )}
     </>
   );

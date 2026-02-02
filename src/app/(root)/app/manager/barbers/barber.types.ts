@@ -1,8 +1,8 @@
 export type Barber = {
-  Id?: number;
-  FirstName: string;
-  LastName: string;
-  Mobile: string;
-  CompanyId: number;
-  Services: number[]
+  id?: number;
+  firstName: string;
+  lastName: string;
+  mobile: string;
+  companyId: number;
+  services: number[];
 };

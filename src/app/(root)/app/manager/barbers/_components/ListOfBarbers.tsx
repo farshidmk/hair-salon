@@ -16,9 +16,9 @@ const ListOfBarbers = () => {
 
   const columns = useMemo((): CustomGridColDef<Barber>[] => {
     return [
-      { field: "FirstName", sortable: false, headerName: "نام", flex: 2, align: "center", headerAlign: "center" },
+      { field: "firstName", sortable: false, headerName: "نام", flex: 2, align: "center", headerAlign: "center" },
       {
-        field: "LastName",
+        field: "lastName",
         sortable: false,
         headerName: "نام خانوادگی",
         flex: 1,
@@ -27,7 +27,7 @@ const ListOfBarbers = () => {
         renderCell: ({ value }) => <a href={`tel:${value}`}>{value}</a>,
       },
       {
-        field: "Mobile",
+        field: "mobile",
         sortable: false,
         headerName: "شماره تلفن",
         width: 200,
@@ -35,7 +35,7 @@ const ListOfBarbers = () => {
         headerAlign: "center",
       },
       {
-        field: "Services",
+        field: "services",
         sortable: false,
         headerName: "سرویس ها",
         width: 200,
@@ -74,9 +74,9 @@ const ListOfBarbers = () => {
     <Container maxWidth="xl" sx={{ flex: 1, overflow: "auto", display: "flex", flexDirection: "column" }}>
       <CustomGridData
         columns={columns}
-        rows={data?.Data}
+        rows={data?.data}
         loading={status === "pending"}
-        getRowId={(row: Barber) => row.Id!}
+        getRowId={(row: Barber) => row.id!}
       />
       ;
     </Container>

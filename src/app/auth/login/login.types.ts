@@ -8,7 +8,7 @@ export type OtpLoginForm = {
 };
 
 export type LoginResponse = {
-  Expiration: string;
-  RefreshToken: string;
-  Token: string;
+  expiration: string;
+  refreshToken: string;
+  token: string;
 };

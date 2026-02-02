@@ -4,6 +4,7 @@ import { Button, Collapse, Divider } from "@mui/material";
 import { useState } from "react";
 import ServiceForm from "./_components/ServiceForm";
 import ListOfServices from "./_components/ListOfServices";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 const ServicesPage = () => {
   const [showCreateService, setShowCreateService] = useState<boolean>(true);
@@ -14,8 +15,8 @@ const ServicesPage = () => {
         <Button
           variant={showCreateService ? "outlined" : "contained"}
           onClick={() => setShowCreateService((p) => !p)}
-          color="success"
-          endIcon={<AddCircleOutlineIcon />}
+          color={showCreateService ? "warning" : "success"}
+          endIcon={showCreateService ? <RemoveCircleOutlineIcon /> : <AddCircleOutlineIcon />}
         >
           ایجاد سرویس جدید
         </Button>
