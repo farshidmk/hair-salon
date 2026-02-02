@@ -23,8 +23,8 @@ function BarberForm() {
   const formMethods = useForm<BarberFormValues>({
     resolver: zodResolver(barberSchema),
     defaultValues: {
-      CompanyId: DEFAULT_COMPANY_ID,
-      Services: [],
+      companyId: DEFAULT_COMPANY_ID,
+      services: [],
     },
   });
   const {
@@ -57,13 +57,13 @@ function BarberForm() {
 
             <Grid size={{ xs: 12 }}>
               <Controller
-                name="Photo"
+                name="photo"
                 control={control}
                 render={({ field }) => (
                   <PhotoDropzone
                     onChange={field.onChange}
-                    error={errors.Photo?.message}
-                    value={watch("Photo") as unknown as File}
+                    error={errors.photo?.message}
+                    value={watch("photo") as unknown as File}
                   />
                 )}
               />
@@ -78,15 +78,15 @@ function BarberForm() {
                 <Autocomplete
                   multiple
                   options={listOfServices?.data?.items ?? []}
-                  getOptionKey={(option: ServiceWithId) => option.Id}
-                  getOptionLabel={(option: ServiceWithId) => option.name}
+                  getOptionKey={(option: ServiceWithId) => option.id}
+                  getOptionLabel={(option: ServiceWithId) => option.title}
                   renderInput={(params) => <TextField {...params} label="سرویس" placeholder="انتخاب سرویس ها" />}
                   fullWidth
-                  value={listOfServices?.data?.items.filter((service) => watch("Services").includes(service.Id))}
+                  value={listOfServices?.data?.items.filter((service) => watch("services").includes(service.id))}
                   onChange={(e, v) => {
                     setValue(
-                      "Services",
-                      v.map((service) => service.Id)
+                      "services",
+                      v.map((service) => service.id)
                     );
                   }}
                 />

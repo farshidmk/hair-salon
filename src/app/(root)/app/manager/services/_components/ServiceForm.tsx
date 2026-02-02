@@ -18,7 +18,7 @@ const ServiceForm = () => {
     defaultValues: {
       beyanePrice: 0,
       companyId: DEFAULT_COMPANY_ID,
-      name: "",
+      title: "",
       price: 0,
     },
   });
@@ -85,7 +85,7 @@ export default ServiceForm;
 
 const ITEMS: IRenderInput<Service>[] = [
   {
-    name: "name",
+    name: "title",
     inputType: "text",
     label: "نام سرویس",
   },
