@@ -15,10 +15,13 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import useGetAllServices from "../_hooks/useGetAllServices";
 import StatusHandler from "@/components/statusHandler/StatusHandler";
 import { ServiceWithId } from "../../services/service.types";
+import { AxiosRequestConfig } from "axios";
+import { toFormData } from "@/services/objectToFormData";
+import CustomCalendar from "@/components/customCalendar/CustomCalendar";
 
 function BarberForm() {
   const { data: listOfServices, status: listOfServicesStatus, refetch: listOfServicesRefetch } = useGetAllServices();
-  const { isPending } = useMutation<ServerResponse<number>, Error, BarberFormValues>({});
+  const { mutate, isPending } = useMutation<ServerResponse<number>, Error, AxiosRequestConfig<FormData>>({});
 
   const formMethods = useForm<BarberFormValues>({
     resolver: zodResolver(barberSchema),
@@ -36,79 +39,85 @@ function BarberForm() {
   } = formMethods;
 
   const onSubmit = (data: BarberFormValues) => {
-    // createBarber.mutate(data);
-    console.log({ data });
+    mutate({
+      method: "post",
+      url: "User/RegisterBarber",
+      data: toFormData(data),
+    });
   };
 
   return (
-    <Container maxWidth="xl">
-      <Typography variant="h5" mb={1} fontWeight={600}>
-        ثبت نام آرایشگر
-      </Typography>
+    <>
+      <CustomCalendar />
+      <Container maxWidth="xl">
+        <Typography variant="h5" mb={1} fontWeight={600}>
+          ثبت نام آرایشگر
+        </Typography>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="pt-4">
-        <FormProvider {...formMethods}>
-          <Grid container spacing={1}>
-            {ITEMS.map((item) => (
-              <Grid size={{ xs: 12, md: 4 }} key={item.name}>
-                <RenderFormItems item={item as IRenderInput} />
-              </Grid>
-            ))}
+        <form onSubmit={handleSubmit(onSubmit)} className="pt-4">
+          <FormProvider {...formMethods}>
+            <Grid container spacing={1}>
+              {ITEMS.map((item) => (
+                <Grid size={{ xs: 12, md: 4 }} key={item.name}>
+                  <RenderFormItems item={item as IRenderInput} />
+                </Grid>
+              ))}
 
-            <Grid size={{ xs: 12 }}>
-              <Controller
-                name="photo"
-                control={control}
-                render={({ field }) => (
-                  <PhotoDropzone
-                    onChange={field.onChange}
-                    error={errors.photo?.message}
-                    value={watch("photo") as unknown as File}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid size={{ xs: 12 }}>
-              <StatusHandler
-                status={listOfServicesStatus}
-                refetch={listOfServicesRefetch}
-                skeletonHeight={20}
-                showLinearProgress
-              >
-                <Autocomplete
-                  multiple
-                  options={listOfServices?.data?.items ?? []}
-                  getOptionKey={(option: ServiceWithId) => option.id}
-                  getOptionLabel={(option: ServiceWithId) => option.title}
-                  renderInput={(params) => <TextField {...params} label="سرویس" placeholder="انتخاب سرویس ها" />}
-                  fullWidth
-                  value={listOfServices?.data?.items.filter((service) => watch("services").includes(service.id))}
-                  onChange={(e, v) => {
-                    setValue(
-                      "services",
-                      v.map((service) => service.id)
-                    );
-                  }}
+              <Grid size={{ xs: 12 }}>
+                <Controller
+                  name="photo"
+                  control={control}
+                  render={({ field }) => (
+                    <PhotoDropzone
+                      onChange={field.onChange}
+                      error={errors.photo?.message}
+                      value={watch("photo") as unknown as File}
+                    />
+                  )}
                 />
-              </StatusHandler>
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <StatusHandler
+                  status={listOfServicesStatus}
+                  refetch={listOfServicesRefetch}
+                  skeletonHeight={20}
+                  showLinearProgress
+                >
+                  <Autocomplete
+                    multiple
+                    options={listOfServices?.data?.items ?? []}
+                    getOptionKey={(option: ServiceWithId) => option.id}
+                    getOptionLabel={(option: ServiceWithId) => option.title}
+                    renderInput={(params) => <TextField {...params} label="سرویس" placeholder="انتخاب سرویس ها" />}
+                    fullWidth
+                    value={listOfServices?.data?.items.filter((service) => watch("services").includes(service.id))}
+                    onChange={(e, v) => {
+                      setValue(
+                        "services",
+                        v.map((service) => service.id)
+                      );
+                    }}
+                  />
+                </StatusHandler>
+              </Grid>
             </Grid>
-          </Grid>
-          <div className="w-full flex items-center justify-center mt-2">
-            <Button
-              type="submit"
-              loading={isPending}
-              sx={{ maxWidth: "400px" }}
-              fullWidth
-              color="success"
-              variant="contained"
-              endIcon={<CheckCircleOutlineIcon />}
-            >
-              ثبت
-            </Button>
-          </div>
-        </FormProvider>
-      </form>
-    </Container>
+            <div className="w-full flex items-center justify-center mt-2">
+              <Button
+                type="submit"
+                loading={isPending}
+                sx={{ maxWidth: "400px" }}
+                fullWidth
+                color="success"
+                variant="contained"
+                endIcon={<CheckCircleOutlineIcon />}
+              >
+                ثبت
+              </Button>
+            </div>
+          </FormProvider>
+        </form>
+      </Container>
+    </>
   );
 }
 

@@ -10,7 +10,7 @@ const BarbersPage = () => {
   const [showCreateService, setShowCreateService] = useState<boolean>(true);
 
   return (
-    <div className="p-2 h-full flex flex-col gap-1 ">
+    <div className="p-2 h-full flex flex-col gap-1 overflow-auto">
       <div className="w-full ">
         <Button
           variant={showCreateService ? "outlined" : "contained"}

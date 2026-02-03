@@ -31,7 +31,7 @@ export const toFormData = (data: Record<string, any>): FormData => {
 
     if (Array.isArray(value)) {
       value.forEach((item) => {
-        formData.append(`${key}[]`, item.toString());
+        formData.append(`${key}`, item);
       });
     } else if (value instanceof File || value instanceof Blob) {
       formData.append(key, value);
