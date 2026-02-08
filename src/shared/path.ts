@@ -14,4 +14,7 @@ export const PATHS = {
     Services: "/app/manager/services",
     Users: "/app/manager/users",
   },
+  App: {
+    Reservation: "/app/reservation",
+  },
 };

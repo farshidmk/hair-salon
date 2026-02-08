@@ -76,7 +76,7 @@ function BarberForm() {
                   )}
                 />
               </Grid>
-              <Grid size={{ xs: 12 }}>
+              {/* <Grid size={{ xs: 12 }}>
                 <StatusHandler
                   status={listOfServicesStatus}
                   refetch={listOfServicesRefetch}
@@ -99,7 +99,7 @@ function BarberForm() {
                     }}
                   />
                 </StatusHandler>
-              </Grid>
+              </Grid> */}
             </Grid>
             <div className="w-full flex items-center justify-center mt-2">
               <Button

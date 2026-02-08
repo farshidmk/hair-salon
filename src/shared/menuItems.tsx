@@ -1,4 +1,4 @@
-import { ShieldUser, Scissors, Highlighter, UsersRound, UserCog } from "lucide-react";
+import { ShieldUser, Scissors, Highlighter, UsersRound, UserCog, BookMarked } from "lucide-react";
 import { PATHS } from "./path";
 import { MenuItem } from "@/types/layout";
 import { Roles } from "./consts";
@@ -43,6 +43,12 @@ const MENU_ITEMS: MenuItem[] = [
         roles: [Roles.Admin],
       },
     ],
+  },
+  {
+    label: "رزرواسیون",
+    path: PATHS.App.Reservation,
+    icon: <BookMarked />,
+    roles: [Roles.Admin, Roles.Customer, Roles.Manager],
   },
 ];
 

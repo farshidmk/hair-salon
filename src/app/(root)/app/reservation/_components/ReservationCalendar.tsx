@@ -1,23 +1,46 @@
 "use client";
 
-import { alpha, Box, Typography } from "@mui/material";
+import { alpha, Autocomplete, Box, TextField, Typography } from "@mui/material";
 import dayjs, { JALALI_MONTHS, JALALI_WEEK_DAYS } from "@/services/dayjs";
 import { useState } from "react";
-import MonthPicker from "./MonthPicker";
-import YearPicker from "./YearPicker";
 import { toPersianDigits } from "@/services/utils";
+import { CalendarViewMode, getMonthDays, getStartOffset, isHoliday } from "@/components/customCalendar/CustomCalendar";
+import MonthPicker from "@/components/customCalendar/MonthPicker";
+import YearPicker from "@/components/customCalendar/YearPicker";
+import { useQuery } from "@tanstack/react-query";
+import { PaginatedServerResponse } from "@/types/server";
+import { ServiceWithId } from "../../manager/services/service.types";
+import { DEFAULT_COMPANY_ID, ULTIMATE_PAGINATION_QUERY } from "@/shared/consts";
+import StatusHandler from "@/components/statusHandler/StatusHandler";
 
-//TODO: check holidays
-// https://pnldev.com/api/calender?year=1404&holiday=true
-
-export type CalendarViewMode = "day" | "month" | "year";
-const CustomCalendar = () => {
+const ReservationCalendar = () => {
+  const [selectedService, setSelectedService] = useState<ServiceWithId | null>(null);
   const [viewMode, setViewMode] = useState<CalendarViewMode>("day");
   const [currentDate, setCurrentDate] = useState(dayjs().calendar("jalali"));
   const [yearRangeStart, setYearRangeStart] = useState(1370);
   const today = dayjs().calendar("jalali");
   const days = getMonthDays(today);
   const offset = getStartOffset(today);
+
+  const {
+    data: services,
+    status: servicesStatus,
+    refetch: servicesRefetch,
+  } = useQuery<PaginatedServerResponse<ServiceWithId>, Error, PaginatedServerResponse<ServiceWithId>>({
+    queryKey: ["Service", ULTIMATE_PAGINATION_QUERY],
+  });
+  const {
+    data: timeReservation,
+    status: timeReservationStatus,
+    refetch: timeReservationRefetch,
+  } = useQuery({
+    queryKey: [
+      "TimeSlot",
+      "SlotGetServiceTimeReserved",
+      `?serviceId=${selectedService?.id}&year=${2024}&month=${currentDate.month()}&companyId=${DEFAULT_COMPANY_ID}`,
+    ],
+    enabled: Boolean(selectedService?.id),
+  });
 
   if (viewMode === "month") {
     return (
@@ -48,6 +71,21 @@ const CustomCalendar = () => {
 
   return (
     <Box>
+      <div className="w-full mt-2 flex-1">
+        <StatusHandler status={servicesStatus} refetch={servicesRefetch} skeletonHeight={20} showLinearProgress>
+          <Autocomplete
+            options={services?.data?.items ?? []}
+            getOptionKey={(option: ServiceWithId) => option.id}
+            getOptionLabel={(option: ServiceWithId) => option.title}
+            renderInput={(params) => <TextField {...params} label="سرویس" placeholder="انتخاب سرویس ها" />}
+            fullWidth
+            value={selectedService}
+            onChange={(e, v) => {
+              setSelectedService(v);
+            }}
+          />
+        </StatusHandler>
+      </div>
       <Box display="flex" justifyContent="center" gap={1} mb={2}>
         <Typography
           fontWeight={600}
@@ -98,30 +136,4 @@ const CustomCalendar = () => {
   );
 };
 
-export default CustomCalendar;
-
-export const getMonthDays = (date: dayjs.Dayjs) => {
-  const startOfMonth = date.startOf("month");
-  const daysInMonth = date.daysInMonth();
-
-  return Array.from({ length: daysInMonth }, (_, i) => startOfMonth.add(i, "day"));
-};
-
-export const getStartOffset = (date: dayjs.Dayjs) => {
-  // day(): 0 = Sunday ... 6 = Saturday
-  // Convert to Persian week (Saturday = 0)
-  const day = date.startOf("month").day();
-  return (day + 1) % 7;
-};
-
-export const isHoliday = (day: dayjs.Dayjs) => {
-  // const jalaliStr = day.format("jYYYY/jMM/jDD");
-
-  // check Friday
-  if (day.day() === 5) return true;
-
-  // check official holidays (from API or JSON)
-  // if (holidaySet.has(jalaliStr)) return true;
-
-  return false;
-};
+export default ReservationCalendar;

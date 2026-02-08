@@ -7,7 +7,7 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ListOfBarbers from "./_components/ListOfBarbers";
 
 const BarbersPage = () => {
-  const [showCreateService, setShowCreateService] = useState<boolean>(true);
+  const [showCreateService, setShowCreateService] = useState<boolean>(false);
 
   return (
     <div className="p-2 h-full flex flex-col gap-1 overflow-auto">

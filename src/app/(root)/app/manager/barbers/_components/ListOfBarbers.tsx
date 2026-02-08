@@ -72,35 +72,14 @@ const ListOfBarbers = () => {
 
   return (
     <Container maxWidth="xl" sx={{ flex: 1, overflow: "auto", display: "flex", flexDirection: "column" }}>
-      <CustomGridData
+      {/* <CustomGridData
         columns={columns}
         rows={data?.data}
         loading={status === "pending"}
         getRowId={(row: Barber) => row.id!}
-      />
-      ;
+      /> */}
     </Container>
   );
 };
-
-{
-  /* <AcsGridData
-          rows={currentRows}
-          columns={columns}
-          getRowId={(row: DynamicDocumentSearchResponseDoc[number]) => row.DocId}
-          paginationState={{
-            pageNumber: pagination.pageNumber,
-            pageSize: pagination.count,
-            setPagination(pageNumber, count) {
-              // onSearch({ pageNumber, count });
-              setPagination({ pageNumber: pageNumber, count });
-            },
-          }}
-          totalItems={data?.data?.count}
-          rowCount={data?.data?.count}
-          loading={isPending}
-          rowHeight={80}
-        /> */
-}
 
 export default ListOfBarbers;
