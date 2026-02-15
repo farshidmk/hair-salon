@@ -4,17 +4,18 @@ import { DEFAULT_COMPANY_ID } from "@/shared/consts";
 import { ServerResponse } from "@/types/server";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
-import { Container, IconButton, Tooltip } from "@mui/material";
+import { Chip, Container, IconButton, Tooltip } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { Barber } from "../barber.types";
+import { BarberListResponse } from "../barber.types";
 
 const ListOfBarbers = () => {
-  const { data, status } = useQuery<ServerResponse<Barber[]>, Error, ServerResponse<Barber[]>>({
+  const { data, status } = useQuery<ServerResponse<BarberListResponse[]>, Error, BarberListResponse[]>({
     queryKey: [`UserCompany/GetBarberCompany?companyId=${DEFAULT_COMPANY_ID}`],
+    select: (res) => res.data,
   });
 
-  const columns = useMemo((): CustomGridColDef<Barber>[] => {
+  const columns = useMemo((): CustomGridColDef<BarberListResponse>[] => {
     return [
       { field: "firstName", sortable: false, headerName: "نام", flex: 2, align: "center", headerAlign: "center" },
       {
@@ -27,7 +28,7 @@ const ListOfBarbers = () => {
         renderCell: ({ value }) => <a href={`tel:${value}`}>{value}</a>,
       },
       {
-        field: "mobile",
+        field: "phoneNumber",
         sortable: false,
         headerName: "شماره تلفن",
         width: 200,
@@ -35,12 +36,22 @@ const ListOfBarbers = () => {
         headerAlign: "center",
       },
       {
-        field: "services",
+        field: "userCompanyServices",
         sortable: false,
         headerName: "سرویس ها",
-        width: 200,
+        flex: 1,
         align: "center",
         headerAlign: "center",
+        renderCell: (row) => {
+          const services = row.row.userCompanyServices;
+          return (
+            <div className="flex gap-1">
+              {services.map((service) => (
+                <Chip key={`${row.row.phoneNumber}-${service.id}`} label={service.title} />
+              ))}
+            </div>
+          );
+        },
       },
 
       {
@@ -50,7 +61,7 @@ const ListOfBarbers = () => {
         width: 120,
         align: "center",
         headerAlign: "center",
-        renderCell: (param) => {
+        renderCell: () => {
           return (
             <div className="w-full flex items-center justify-center gap-0.5">
               <Tooltip title="حذف">
@@ -72,12 +83,12 @@ const ListOfBarbers = () => {
 
   return (
     <Container maxWidth="xl" sx={{ flex: 1, overflow: "auto", display: "flex", flexDirection: "column" }}>
-      {/* <CustomGridData
+      <CustomGridData
         columns={columns}
-        rows={data?.data}
+        rows={data ?? []}
         loading={status === "pending"}
-        getRowId={(row: Barber) => row.id!}
-      /> */}
+        getRowId={(row: BarberListResponse) => row.phoneNumber!}
+      />
     </Container>
   );
 };

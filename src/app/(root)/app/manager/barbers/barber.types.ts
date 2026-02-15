@@ -1,3 +1,5 @@
+import { ServiceWithId } from "../services/service.types";
+
 export type Barber = {
   id?: number;
   firstName: string;
@@ -5,4 +7,13 @@ export type Barber = {
   mobile: string;
   companyId: number;
   services: number[];
+};
+
+export type BarberListResponse = {
+  firstName: string;
+  lastName: string;
+  nationalCode: number;
+  photo: string;
+  phoneNumber: string;
+  userCompanyServices: ServiceWithId[];
 };
