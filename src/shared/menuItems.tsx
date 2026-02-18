@@ -28,6 +28,12 @@ const MENU_ITEMS: MenuItem[] = [
         icon: <UsersRound />,
         roles: [Roles.Admin, Roles.Manager],
       },
+      {
+        label: "رزرواسیون",
+        path: PATHS.Manager.Reservation,
+        icon: <BookMarked />,
+        roles: [Roles.Admin, Roles.Manager],
+      },
     ],
   },
   {

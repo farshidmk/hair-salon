@@ -13,6 +13,7 @@ export const PATHS = {
     Barbers: "/app/manager/barbers",
     Services: "/app/manager/services",
     Users: "/app/manager/users",
+    Reservation: "/app/manager/reservation",
   },
   App: {
     Reservation: "/app/reservation",
