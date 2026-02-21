@@ -3,7 +3,7 @@ import ReservationCalendar from "./_components/ReservationCalendar";
 
 const UserReservationPage = () => {
   return (
-    <div>
+    <div className="p-2">
       <ReservationCalendar />
     </div>
   );

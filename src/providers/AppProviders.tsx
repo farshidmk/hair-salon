@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as React from "react";
 import AppThemeProvider from "./AppThemeProvider";
 import { getRequest, mutationRequest } from "@/services/serverCall";
+import { ToastContainer } from "react-toastify";
 
 type Props = {
   children: React.ReactNode;
@@ -26,6 +27,18 @@ const AppProviders = ({ children }: Props) => {
     <AppThemeProvider>
       <QueryClientProvider client={queryClient}>
         <main>{children}</main>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          rtl
+          theme="colored"
+        />
       </QueryClientProvider>
     </AppThemeProvider>
   );

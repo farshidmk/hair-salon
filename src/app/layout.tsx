@@ -2,6 +2,7 @@ import { vazirmatn } from "@/shared/fonts";
 import type { Metadata } from "next";
 import * as React from "react";
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import AppProviders from "@/providers/AppProviders";
 
 export const metadata: Metadata = {

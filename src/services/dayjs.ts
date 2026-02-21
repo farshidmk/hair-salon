@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import jalaliday from "jalaliday";
+import { toPersianDigits } from "./utils";
 
 dayjs.extend(jalaliday);
 
@@ -21,3 +22,11 @@ export const JALALI_MONTHS = [
   "بهمن",
   "اسفند",
 ];
+
+export const getPersianDateLabel = (date: dayjs.Dayjs) => {
+  const gregoryWeekDayIndex = date.calendar("gregory").day();
+  const jalaliWeekDay = JALALI_WEEK_DAYS[(gregoryWeekDayIndex + 1) % 7];
+  const jalaliMonth = JALALI_MONTHS[date.month()];
+
+  return `${jalaliWeekDay} ${toPersianDigits(date.date())} ${jalaliMonth} ${toPersianDigits(date.year())}`;
+};
