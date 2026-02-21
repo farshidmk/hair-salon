@@ -8,19 +8,22 @@ import { CalendarViewMode, getMonthDays, getStartOffset, isHoliday } from "@/com
 import MonthPicker from "@/components/customCalendar/MonthPicker";
 import YearPicker from "@/components/customCalendar/YearPicker";
 import { useQuery } from "@tanstack/react-query";
-import { PaginatedServerResponse } from "@/types/server";
+import { PaginatedServerResponse, ServerResponse } from "@/types/server";
 import { DEFAULT_COMPANY_ID, ULTIMATE_PAGINATION_QUERY } from "@/shared/consts";
 import StatusHandler from "@/components/statusHandler/StatusHandler";
 import { ServiceWithId } from "../../services/service.types";
+import { BarberListResponse } from "../../barbers/barber.types";
 
 const ReservationCalendar = () => {
   const [selectedService, setSelectedService] = useState<ServiceWithId | null>(null);
+  const [selectedBarber, setSelectedBarber] = useState<BarberListResponse | null>(null);
   const [viewMode, setViewMode] = useState<CalendarViewMode>("day");
   const [currentDate, setCurrentDate] = useState(dayjs().calendar("jalali"));
   const [yearRangeStart, setYearRangeStart] = useState(1370);
   const today = dayjs().calendar("jalali");
   const days = getMonthDays(today);
   const offset = getStartOffset(today);
+  const georgianDate = currentDate.calendar("gregory");
 
   const {
     data: services,
@@ -29,17 +32,28 @@ const ReservationCalendar = () => {
   } = useQuery<PaginatedServerResponse<ServiceWithId>, Error, PaginatedServerResponse<ServiceWithId>>({
     queryKey: ["Service", ULTIMATE_PAGINATION_QUERY],
   });
+
+  // const {
+  //   data: barbers,
+  //   status: barbersStatus,
+  //   refetch: barbersRefetch,
+  // } = useQuery<ServerResponse<BarberListResponse[]>, Error, BarberListResponse[]>({
+  //   queryKey: ["UserCompanyService", "Getbarbers", selectedService?.id],
+  //   enabled: Boolean(selectedService?.id),
+  //   select: (res) => res.data,
+  // });
   const {
-    data: timeReservation,
-    status: timeReservationStatus,
-    refetch: timeReservationRefetch,
-  } = useQuery({
+    data: timeSlot,
+    status: TimeSlotStatus,
+    refetch: timeSlotRefetch,
+  } = useQuery<ServerResponse<BarberListResponse[]>, Error, BarberListResponse[]>({
     queryKey: [
       "TimeSlot",
       "SlotGetServiceTimeReserved",
-      `?serviceId=${selectedService?.id}&year=${2024}&month=${currentDate.month()}&companyId=${DEFAULT_COMPANY_ID}`,
+      `?serviceId=${selectedService?.id}&year=${georgianDate.year()}&month=${georgianDate.month()}&companyId=${DEFAULT_COMPANY_ID}`,
     ],
     enabled: Boolean(selectedService?.id),
+    select: (res) => res.data,
   });
 
   if (viewMode === "month") {
@@ -89,19 +103,25 @@ const ReservationCalendar = () => {
             </StatusHandler>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
-            <StatusHandler status={servicesStatus} refetch={servicesRefetch} skeletonHeight={20} showLinearProgress>
+            {/* <StatusHandler
+              status={!Boolean(selectedService) ? "success" : barbersStatus}
+              refetch={barbersRefetch}
+              skeletonHeight={20}
+              showLinearProgress
+            >
               <Autocomplete
-                options={services?.data?.items ?? []}
-                getOptionKey={(option: ServiceWithId) => option.id}
-                getOptionLabel={(option: ServiceWithId) => option.title}
+                options={barbers ?? []}
+                getOptionKey={(option: BarberListResponse) => option.nationalCode}
+                getOptionLabel={(option: BarberListResponse) => `${option.firstName} ${option.lastName}`}
                 renderInput={(params) => <TextField {...params} label="سرویس" placeholder="انتخاب سرویس ها" />}
                 fullWidth
-                value={selectedService}
+                disabled={!Boolean(selectedService)}
+                value={selectedBarber}
                 onChange={(e, v) => {
-                  setSelectedService(v);
+                  setSelectedBarber(v);
                 }}
               />
-            </StatusHandler>
+            </StatusHandler> */}
           </Grid>
         </Grid>
       </div>

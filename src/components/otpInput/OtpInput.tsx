@@ -46,7 +46,7 @@ const OTPInput = ({ length = 6, onChange }: { length?: number; onChange: (value:
                   maxLength: 1,
                   style: {
                     textAlign: "center",
-                    fontSize: "1.5rem",
+                    fontSize: "1rem",
                   },
                 }}
                 variant="outlined"
