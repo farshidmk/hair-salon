@@ -20,7 +20,7 @@ const ListOfServices = () => {
 
   const columns = useMemo((): CustomGridColDef<Service>[] => {
     return [
-      { field: "name", sortable: false, headerName: "نام", flex: 2, align: "center", headerAlign: "center" },
+      { field: "title", sortable: false, headerName: "نام", flex: 2, align: "center", headerAlign: "center" },
       {
         field: "price",
         sortable: false,

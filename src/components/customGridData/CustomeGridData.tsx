@@ -51,7 +51,7 @@ const CustomGridData = (props: Props) => {
 
   // ✅ Custom Pagination component to inject into DataGrid
   const CustomPagination = () => {
-    if (!paginationState || !showPageSelector || totalPages <= 0) return null;
+    if (!paginationState || totalPages <= 0) return null;
 
     // calculate range
     const start = paginationState.pageNumber * paginationState.pageSize + 1;

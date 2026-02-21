@@ -1,13 +1,13 @@
+import CountdownButton from "@/app/auth/login/_components/CountDownButton";
 import OTPInput from "@/components/otpInput/OtpInput";
+import { setLoginInfoInCookie } from "@/services/cookies";
 import { ServerCall, ServerResponse } from "@/types/server";
 import { Button, Typography } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import React, { useState } from "react";
-import { LoginResponse, OtpLoginForm } from "../login.types";
 import { BadgeCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import CountdownButton from "@/app/auth/login/_components/CountDownButton";
-import { setLoginInfoInCookie } from "@/services/cookies";
+import { useState } from "react";
+import { LoginResponse, OtpLoginForm } from "../login.types";
 
 type Props = {
   phoneNumber: string;
@@ -63,7 +63,7 @@ const OtpInputForm = ({ phoneNumber, userId }: Props) => {
       <Button
         variant="outlined"
         endIcon={<BadgeCheck />}
-        onClick={sendOtp}
+        onClick={() => sendOtp(otpCode)}
         disabled={otpCode.length !== 6}
         fullWidth
         loading={isPending}

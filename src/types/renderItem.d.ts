@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { QueryStatus } from "@tanstack/react-query";
 import React from "react";
-import { FieldErrors, FieldValue, FieldValues } from "react-hook-form";
+import { FieldErrors, FieldValue, FieldValues, ControllerRenderProps } from "react-hook-form";
 import { DatePickerProps } from "react-multi-date-picker";
 
 type TInputTypes = "text" | "autocomplete" | "checkbox" | "select" | "date" | "password" | "custom";
@@ -77,7 +77,7 @@ type IRenderInput<T = unknown> =
 
 type IRenderFormInput<T = FieldValue> = IRenderInput<T> & {
   errors: FieldErrors<T>;
-  control: unknown;
+  control: ControllerRenderProps;
   // control: ControllerRenderProps<FieldValues, string>;
   setValue?: UseFormSetValue<T>;
   gridProps?: Grid2Props;

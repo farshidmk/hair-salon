@@ -50,7 +50,7 @@ export default CreateService;
 
 const ITEMS: IRenderInput<Service>[] = [
   {
-    name: "name",
+    name: "title",
     inputType: "text",
     label: "نام سرویس",
   },

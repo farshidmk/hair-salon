@@ -37,13 +37,13 @@ const RenderItem = (props: IRenderFormInput) => {
         <InputLabel>{label}</InputLabel>
         <Select
           label={label}
-          error={errors?.[name as string]?.message as string}
+          error={Boolean(errors?.[name as string]?.message)}
           fullWidth
           {...control}
           {...elementProps}
         >
           {options?.map((option) => (
-            <MenuItem key={`${option.value}-${option.title}`} value={option.value}>
+            <MenuItem key={`${option.value}-${option.title}`} value={option.value as string}>
               {option.title}
             </MenuItem>
           ))}
@@ -61,9 +61,9 @@ const RenderItem = (props: IRenderFormInput) => {
       <FormGroup>
         <FormControlLabel
           {...control}
-          {...elementProps}
           control={
             <Checkbox
+              {...elementProps}
               checked={!!control.value}
               onChange={(e) => control.onChange(e.target.checked)}
               name={control.name}
