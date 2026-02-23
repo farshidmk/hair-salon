@@ -63,7 +63,13 @@ const getTimeLabel = (value: string) => {
 
 const ReservationCalendar = () => {
   const [viewMode, setViewMode] = useState<CalendarViewMode>("day");
+  /**
+   * date for showing calendar
+   */
   const [currentDate, setCurrentDate] = useState(dayjs().calendar("jalali"));
+  /**
+   * selectedDate from current calendar
+   */
   const [selectedDate, setSelectedDate] = useState(dayjs().calendar("jalali").startOf("day"));
   const [yearRangeStart, setYearRangeStart] = useState(1370);
 
@@ -119,7 +125,7 @@ const ReservationCalendar = () => {
     queryKey: [
       "TimeSlot",
       "SlotGetServiceTimeReserved",
-      `?serviceId=${selectedService}&year=${georgianDate.year()}&month=${georgianDate.month()}&companyId=${DEFAULT_COMPANY_ID}`,
+      `?serviceId=${selectedService}&year=${georgianDate.year()}&month=${georgianDate.month() + 1}&companyId=${DEFAULT_COMPANY_ID}`,
     ],
     enabled: Boolean(selectedService),
     select: (res) => res.data,
@@ -128,7 +134,6 @@ const ReservationCalendar = () => {
   const {
     mutate,
     isPending,
-    data: createTimeSpanResult,
     error: createTimeSpanError,
   } = useMutation<ServerResponse<boolean>, Error, AxiosRequestConfig<CreateTimeSpanPayload>>({
     onSuccess: () => {
@@ -159,7 +164,6 @@ const ReservationCalendar = () => {
       return key ? key === selectedDateKey : true;
     });
   }, [selectedDateKey, timeSlot]);
-
   const onSubmit = (values: ReservationFormValues) => {
     const dateKey = selectedDate.calendar("gregory").format("YYYY-MM-DD");
     const startDateTime = `${dateKey}T${values.startTime}:00`;
