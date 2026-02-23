@@ -8,11 +8,14 @@ import {
   Button,
   Chip,
   Grid,
+  IconButton,
   Paper,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
+import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import dayjs, { getPersianDateLabel, JALALI_MONTHS, JALALI_WEEK_DAYS } from "@/services/dayjs";
 import { useMemo, useState } from "react";
 import { toPersianDigits } from "@/services/utils";
@@ -95,7 +98,6 @@ const ReservationCalendar = () => {
   const selectedService = watch("serviceId");
   const selectedBarber = watch("barberId");
 
-  const georgianDate = currentDate.calendar("gregory");
   const days = getMonthDays(currentDate);
   const offset = getStartOffset(currentDate);
 
@@ -125,7 +127,7 @@ const ReservationCalendar = () => {
     queryKey: [
       "TimeSlot",
       "SlotGetServiceTimeReserved",
-      `?serviceId=${selectedService}&year=${georgianDate.year()}&month=${georgianDate.month() + 1}&companyId=${DEFAULT_COMPANY_ID}`,
+      `?serviceId=${selectedService}&year=${currentDate.year()}&month=${currentDate.month() + 1}&companyId=${DEFAULT_COMPANY_ID}`,
     ],
     enabled: Boolean(selectedService),
     select: (res) => res.data,
@@ -145,6 +147,20 @@ const ReservationCalendar = () => {
   });
 
   const selectedDateKey = useMemo(() => selectedDate.calendar("gregory").format("YYYY-MM-DD"), [selectedDate]);
+
+  const goToPrevMonth = () => {
+    const month = currentDate.month();
+    const next = month === 0 ? currentDate.year(currentDate.year() - 1).month(11) : currentDate.month(month - 1);
+    setCurrentDate(next);
+    setSelectedDate(next.date(1));
+  };
+
+  const goToNextMonth = () => {
+    const month = currentDate.month();
+    const next = month === 11 ? currentDate.year(currentDate.year() + 1).month(0) : currentDate.month(month + 1);
+    setCurrentDate(next);
+    setSelectedDate(next.date(1));
+  };
 
   const slotsByDate = useMemo(() => {
     const counts = new Map<string, number>();
@@ -333,6 +349,9 @@ const ReservationCalendar = () => {
               }}
             >
               <Box display="flex" justifyContent="center" gap={1} mb={2}>
+                <IconButton onClick={goToPrevMonth} size="small" aria-label="ماه قبل">
+                  <ChevronRightRoundedIcon className="nav-icon-prev" fontSize="small" />
+                </IconButton>
                 <Chip
                   color="primary"
                   variant="outlined"
@@ -347,6 +366,9 @@ const ReservationCalendar = () => {
                   onClick={() => setViewMode("year")}
                   sx={{ fontWeight: 600 }}
                 />
+                <IconButton onClick={goToNextMonth} size="small" aria-label="ماه بعد">
+                  <ChevronLeftRoundedIcon className="nav-icon-next" fontSize="small" />
+                </IconButton>
               </Box>
 
               <Box display="grid" gridTemplateColumns="repeat(7, 1fr)" gap={1}>
