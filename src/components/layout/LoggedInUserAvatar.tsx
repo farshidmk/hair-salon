@@ -1,4 +1,3 @@
-import useGetUserInfo from "@/hooks/useGetUserInfo";
 import useIsSmallScreen from "@/hooks/useIsSmallScreen";
 import { Avatar, Box, Popover, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -6,10 +5,15 @@ import React from "react";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { logout } from "@/services/cookies";
 import { useRouter } from "next/navigation";
+import { clearAuthTokens } from "@/services/authToken";
+import { LoggedInUser } from "@/types/user";
 
-const LoggedInUserAvatar = () => {
+type Props = {
+  userInfo: LoggedInUser;
+};
+
+const LoggedInUserAvatar = ({ userInfo }: Props) => {
   const router = useRouter();
-  const { data: userInfo } = useGetUserInfo();
   const isSmallScreen = useIsSmallScreen();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -31,7 +35,7 @@ const LoggedInUserAvatar = () => {
       </IconButton>
       {!isSmallScreen && (
         <div className="flex flex-col gap-0.5">
-          <Typography variant="body1">{userInfo!.surname}</Typography>
+          <Typography variant="body1">{userInfo.surname}</Typography>
         </div>
       )}
 
@@ -50,6 +54,7 @@ const LoggedInUserAvatar = () => {
             onClick={async () => {
               try {
                 await logout();
+                clearAuthTokens();
                 router.push("/");
                 handleClose();
               } catch (error) {

@@ -1,6 +1,6 @@
 import CountdownButton from "@/app/auth/login/_components/CountDownButton";
 import OTPInput from "@/components/otpInput/OtpInput";
-import { setLoginInfoInCookie } from "@/services/cookies";
+import { setAuthTokens } from "@/services/authToken";
 import { ServerCall, ServerResponse } from "@/types/server";
 import { Button, Typography } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
@@ -32,7 +32,7 @@ const OtpInputForm = ({ phoneNumber, userId }: Props) => {
       {
         onSuccess: async (res) => {
           if (res.succeeded) {
-            await setLoginInfoInCookie(res.data.token, res.data.refreshToken);
+            setAuthTokens(res.data.token, res.data.refreshToken);
             router.push("/app");
           }
         },

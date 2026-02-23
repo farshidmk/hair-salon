@@ -1,4 +1,5 @@
 import { api } from "@/shared/api";
+import { getAccessToken } from "@/services/authToken";
 import { ServerCall } from "@/types/server";
 import { QueryFunction, QueryKey } from "@tanstack/react-query";
 import axios from "axios";
@@ -6,9 +7,16 @@ import axios from "axios";
 // Generic server call
 export async function serverCall<T = unknown>(config: ServerCall<T>): Promise<T> {
   try {
+    const token = getAccessToken();
+    const headers = { ...(config.headers ?? {}) };
+    if (token && !("Authorization" in headers) && !("authorization" in headers)) {
+      (headers as Record<string, string>).Authorization = `Bearer ${token}`;
+    }
+
     const response = await api.request<T>({
       ...config,
       url: `/${config.url}`,
+      headers,
       withCredentials: true,
     });
 

@@ -1,14 +1,16 @@
 "use client";
 
-import useGetUserInfo from "@/hooks/useGetUserInfo";
+import { getStoredUserInfo, subscribeAuthChange } from "@/services/authToken";
+import { LoggedInUser } from "@/types/user";
 import LoginIcon from "@mui/icons-material/Login";
-import { CircularProgress, Tooltip, Typography } from "@mui/material";
+import { Tooltip, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import { AlignJustify } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import LoggedInUserAvatar from "./LoggedInUserAvatar";
 
 type Props = {
@@ -16,17 +18,21 @@ type Props = {
 };
 
 const Header = ({ toggleSidebar }: Props) => {
-  const { data: userInfo, status: tokenStatus } = useGetUserInfo();
+  const [userInfo, setUserInfo] = useState<LoggedInUser | null>(null);
+
+  useEffect(() => {
+    const sync = () => setUserInfo(getStoredUserInfo());
+    sync();
+    return subscribeAuthChange(sync);
+  }, []);
 
   return (
     <Box>
       <AppBar position="static">
         <Toolbar className="flex justify-between w-full">
           <div className="flex-1 flex justify-start">
-            {tokenStatus === "pending" ? (
-              <CircularProgress />
-            ) : userInfo ? (
-              <LoggedInUserAvatar />
+            {userInfo ? (
+              <LoggedInUserAvatar userInfo={userInfo} />
             ) : (
               <Link href="/auth/login">
                 <Tooltip title="ورود">

@@ -17,11 +17,10 @@ import {
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import dayjs, { getPersianDateLabel, JALALI_MONTHS, JALALI_WEEK_DAYS } from "@/services/dayjs";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { toPersianDigits } from "@/services/utils";
-import { CalendarViewMode, getMonthDays, getStartOffset, isHoliday } from "@/components/customCalendar/CustomCalendar";
-import MonthPicker from "@/components/customCalendar/MonthPicker";
-import YearPicker from "@/components/customCalendar/YearPicker";
+import { isHoliday } from "@/components/customCalendar/CustomCalendar";
+import CalendarPickerOverlay from "@/components/customCalendar/CalendarPickerOverlay";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { PaginatedServerResponse, ServerResponse } from "@/types/server";
 import { DEFAULT_COMPANY_ID, ULTIMATE_PAGINATION_QUERY } from "@/shared/consts";
@@ -31,6 +30,7 @@ import { AxiosRequestConfig } from "axios";
 import { BarberWithUserId, CreateTimeSpanPayload, TimeSpanItem } from "../managerReservation.types";
 import { Controller, useForm } from "react-hook-form";
 import { notify } from "@/services/toast";
+import { useCalendar } from "@/providers/CalendarProvider";
 
 type ReservationFormValues = {
   serviceId: number | null;
@@ -65,16 +65,18 @@ const getTimeLabel = (value: string) => {
 };
 
 const ReservationCalendar = () => {
-  const [viewMode, setViewMode] = useState<CalendarViewMode>("day");
-  /**
-   * date for showing calendar
-   */
-  const [currentDate, setCurrentDate] = useState(dayjs().calendar("jalali"));
-  /**
-   * selectedDate from current calendar
-   */
-  const [selectedDate, setSelectedDate] = useState(dayjs().calendar("jalali").startOf("day"));
-  const [yearRangeStart, setYearRangeStart] = useState(1370);
+  const {
+    currentDate,
+    selectedDate,
+    setSelectedDate,
+    days,
+    offset,
+    selectedDateKey,
+    goToPrevMonth,
+    goToNextMonth,
+    openMonthPicker,
+    openYearPicker,
+  } = useCalendar();
 
   const {
     control,
@@ -97,9 +99,6 @@ const ReservationCalendar = () => {
 
   const selectedService = watch("serviceId");
   const selectedBarber = watch("barberId");
-
-  const days = getMonthDays(currentDate);
-  const offset = getStartOffset(currentDate);
 
   const {
     data: services,
@@ -145,22 +144,6 @@ const ReservationCalendar = () => {
       timeSlotRefetch();
     },
   });
-
-  const selectedDateKey = useMemo(() => selectedDate.calendar("gregory").format("YYYY-MM-DD"), [selectedDate]);
-
-  const goToPrevMonth = () => {
-    const month = currentDate.month();
-    const next = month === 0 ? currentDate.year(currentDate.year() - 1).month(11) : currentDate.month(month - 1);
-    setCurrentDate(next);
-    setSelectedDate(next.date(1));
-  };
-
-  const goToNextMonth = () => {
-    const month = currentDate.month();
-    const next = month === 11 ? currentDate.year(currentDate.year() + 1).month(0) : currentDate.month(month + 1);
-    setCurrentDate(next);
-    setSelectedDate(next.date(1));
-  };
 
   const slotsByDate = useMemo(() => {
     const counts = new Map<string, number>();
@@ -210,39 +193,9 @@ const ReservationCalendar = () => {
     );
   };
 
-  if (viewMode === "month") {
-    return (
-      <MonthPicker
-        currentDate={currentDate}
-        onSelect={(month) => {
-          const next = currentDate.month(month);
-          setCurrentDate(next);
-          setSelectedDate(next.date(1));
-          setViewMode("day");
-        }}
-      />
-    );
-  }
-
-  if (viewMode === "year") {
-    return (
-      <YearPicker
-        currentYear={currentDate.year()}
-        startYear={yearRangeStart}
-        onPrev={() => setYearRangeStart((y) => y - 12)}
-        onNext={() => setYearRangeStart((y) => y + 12)}
-        onSelect={(year) => {
-          const next = currentDate.year(year);
-          setCurrentDate(next);
-          setSelectedDate(next.date(1));
-          setViewMode("day");
-        }}
-      />
-    );
-  }
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <CalendarPickerOverlay />
       <Stack gap={2}>
         <Paper
           elevation={0}
@@ -326,7 +279,6 @@ const ReservationCalendar = () => {
                       disabled={!Boolean(selectedService)}
                       value={barbers?.find((barber) => barber.id === field.value) ?? null}
                       onChange={(_, value) => {
-                        console.log({ value });
                         field.onChange(value?.id ?? null);
                         clearErrors("barberId");
                       }}
@@ -350,24 +302,24 @@ const ReservationCalendar = () => {
             >
               <Box display="flex" justifyContent="center" gap={1} mb={2}>
                 <IconButton onClick={goToPrevMonth} size="small" aria-label="ماه قبل">
-                  <ChevronRightRoundedIcon className="nav-icon-prev" fontSize="small" />
+                  <ChevronRightRoundedIcon fontSize="small" />
                 </IconButton>
                 <Chip
                   color="primary"
                   variant="outlined"
                   label={JALALI_MONTHS[currentDate.month()]}
-                  onClick={() => setViewMode("month")}
+                  onClick={openMonthPicker}
                   sx={{ fontWeight: 600 }}
                 />
                 <Chip
                   color="info"
                   variant="outlined"
                   label={toPersianDigits(currentDate.year())}
-                  onClick={() => setViewMode("year")}
+                  onClick={openYearPicker}
                   sx={{ fontWeight: 600 }}
                 />
                 <IconButton onClick={goToNextMonth} size="small" aria-label="ماه بعد">
-                  <ChevronLeftRoundedIcon className="nav-icon-next" fontSize="small" />
+                  <ChevronLeftRoundedIcon fontSize="small" />
                 </IconButton>
               </Box>
 
@@ -581,5 +533,4 @@ const ReservationCalendar = () => {
     </form>
   );
 };
-
 export default ReservationCalendar;

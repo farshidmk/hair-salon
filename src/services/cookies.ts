@@ -11,21 +11,21 @@ export async function getTokenInfo() {
   if (!token) {
     return null;
   }
-  const decodedToken = jwt.decode(token) as any;
+  const decodedToken = jwt.decode(token) as Record<string, unknown> | null;
+  if (!decodedToken) {
+    return null;
+  }
 
   const tokenInfo: LoggedInUser = {
-    mobilePhone: decodedToken[`${tokenDefaultKey}mobilephone`],
-    surname: decodedToken[`${tokenDefaultKey}surname`],
-    role: decodedToken[`Role`],
+    mobilePhone: String(decodedToken[`${tokenDefaultKey}mobilephone`] ?? ""),
+    surname: String(decodedToken[`${tokenDefaultKey}surname`] ?? ""),
+    role: Array.isArray(decodedToken.Role)
+      ? decodedToken.Role.filter((item): item is string => typeof item === "string")
+      : typeof decodedToken.Role === "string"
+        ? [decodedToken.Role]
+        : [],
   };
   return tokenInfo;
-}
-
-export async function setLoginInfoInCookie(token: string, refreshToken: string) {
-  const cookieStore = await cookies();
-  cookieStore.set("token", token, {});
-  cookieStore.set("refreshToken", refreshToken, {});
-  return true;
 }
 
 export async function logout() {
