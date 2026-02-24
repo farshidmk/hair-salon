@@ -43,7 +43,8 @@ const CountdownButton = ({ phoneNumber }: Props) => {
     <Button
       variant="contained"
       color="info"
-      disabled={timeLeft >= 0}
+      disabled={timeLeft > 0}
+      size="small"
       endIcon={isPending ? <CircularProgress size={18} /> : <RefreshIcon />}
       onClick={() =>
         mutate(
@@ -62,8 +63,9 @@ const CountdownButton = ({ phoneNumber }: Props) => {
         )
       }
       fullWidth
+      sx={{ maxWidth: "160px" }}
     >
-      {timeLeft > 0 ? formatTime(timeLeft) : "ارسال مجدد کد"}
+      {timeLeft > 0 ? formatTime(timeLeft) : <span className="text-xs">ارسال مجدد کد</span>}
     </Button>
   );
 };

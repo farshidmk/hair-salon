@@ -32,7 +32,7 @@ const OtpInputForm = ({ phoneNumber, userId }: Props) => {
       {
         onSuccess: async (res) => {
           if (res.succeeded) {
-            setAuthTokens(res.data.token, res.data.refreshToken);
+            setAuthTokens(res.data.token, res.data.refreshToken, res.data.expiration);
             router.push("/app");
           }
         },
@@ -55,9 +55,9 @@ const OtpInputForm = ({ phoneNumber, userId }: Props) => {
             }
           }}
         />
-        <div className="flex-1 min-w-32">
-          <CountdownButton phoneNumber={phoneNumber} />
-        </div>
+      </div>
+      <div className="w-full flex items-center justify-center">
+        <CountdownButton phoneNumber={phoneNumber} />
       </div>
       <div className="flex-1" />
       <Button
