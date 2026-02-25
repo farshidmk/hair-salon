@@ -110,4 +110,8 @@ const LeftMenu = ({ open, handleClose }: Props) => {
 
 export default LeftMenu;
 
-const hasAccess = (userRoles: Roles[] = [], itemRoles: Roles[]) => itemRoles.some((role) => userRoles.includes(role));
+const hasAccess = (userRoles: Roles[] = [], itemRoles: Roles[]) =>
+  itemRoles.some((role) => {
+    console.log({ userRoles, role });
+    return userRoles.includes(role);
+  });
